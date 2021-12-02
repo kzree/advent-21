@@ -8,23 +8,25 @@ import (
 	"strings"
 )
 
-func moveSubmarine(x *int, y *int, value string) {
+func moveSubmarine(x *int, y *int, aim *int, value string) {
 	splitValue := strings.Fields(value)
 	moveAmount, _ := strconv.Atoi(splitValue[1])
 
 	switch splitValue[0] {
 	case "up":
-		*y = *y - moveAmount
+		*aim -= moveAmount
 	case "down":
-		*y = *y + moveAmount
+		*aim += moveAmount
 	case "forward":
 		*x = *x + moveAmount
+		*y += *aim * moveAmount
 	}
 }
 
 func movement() {
 	x := 0
 	y := 0
+	aim := 0
 
 	file, err := os.Open("movement_input.txt")
 
@@ -36,7 +38,7 @@ func movement() {
 	scanner.Split(bufio.ScanLines)
 
 	for scanner.Scan() {
-		moveSubmarine(&x, &y, scanner.Text())
+		moveSubmarine(&x, &y, &aim, scanner.Text())
 	}
 
 	log.Printf("%d", x*y)
